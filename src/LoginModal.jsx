@@ -2,53 +2,64 @@ import React, { useState } from 'react';
 
 function LoginModal({ onClose }) {
   const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState(''); // Added state for username
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isLogin) {
-      // Handle login logic
       console.log('Logging in with:', username, password);
     } else {
-      // Handle signup logic
       console.log('Signing up with:', username, email, password);
     }
-    onClose(); // Close the modal after submit
+    handleClose(); // Use handleClose for smooth transition
+  };
+
+  const handleClose = () => {
+    document.getElementById('login-modal').classList.add('fade-out');
+    setTimeout(onClose, 500); // Delay to allow fade-out animation
+  };
+
+  const handleSwitchForm = () => {
+    document.getElementById('login-form').classList.add('fade-out');
+    setTimeout(() => {
+      setIsLogin(!isLogin);
+      document.getElementById('login-form').classList.remove('fade-out');
+    }, 500); // Delay to allow the fade-out animation before switching forms
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+    <div id="login-modal" className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity duration-500 ease-in-out fade-in">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96 transform transition-transform duration-500 ease-in-out scale-95">
         <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
           {isLogin ? 'Login' : 'Create Account'}
         </h2>
-        <form onSubmit={handleSubmit}>
+        <form id="login-form" onSubmit={handleSubmit} className="transition-opacity duration-500 ease-in-out">
+          <div className="mb-4">
+            <label className="block text-gray-700 dark:text-gray-300 mb-2">Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              placeholder="Enter your username"
+            />
+          </div>
           {!isLogin && (
             <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2">Username</label>
+              <label className="block text-gray-700 dark:text-gray-300 mb-2">Email</label>
               <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-                placeholder="Enter your username"
+                placeholder="Enter your email"
               />
             </div>
           )}
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-              placeholder="Enter your email"
-            />
-          </div>
           <div className="mb-4">
             <label className="block text-gray-700 dark:text-gray-300 mb-2">Password</label>
             <input
@@ -70,14 +81,14 @@ function LoginModal({ onClose }) {
         <p className="text-center text-gray-600 dark:text-gray-400 mt-4">
           {isLogin ? 'Don’t have an account?' : 'Already have an account?'}{' '}
           <button
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={handleSwitchForm}
             className="text-blue-500 dark:text-blue-400 underline"
           >
             {isLogin ? 'Create one' : 'Log in'}
           </button>
         </p>
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="mt-4 text-red-500 dark:text-red-400 underline block text-center"
         >
           Close

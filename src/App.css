@@ -1,32 +1,165 @@
-/* General Layout */
-.container {
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-in-out forwards;
+}
+
+/* app.css */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
   display: flex;
-  flex-direction: column; /* Stack items vertically by default */
-  padding: 20px;
-  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeIn 0.7s forwards; /* Fades in over 0.7 seconds */
 }
 
-.w-3/4, .w-1/4 {
-  width: 100%; /* Make both containers take full width on mobile */
+.modal-content {
+  background-color: #2d3748;
+  color: #fff;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  max-width: 600px;
+  width: 100%;
+  transform: scale(0.95);
+  animation: scaleUp 0.5s forwards; /* Scales up smoothly */
 }
 
-/* Logo Styling */
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms, transform 300ms;
+.modal-close {
+  display: block;
+  text-align: right;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  cursor: pointer;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.modal-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.modal-select, .modal-input {
+  background-color: #4a5568;
+  color: #fff;
+  border: 1px solid #718096;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.modal-button {
+  background-color: #ed8936;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: transform 0.5s ease; /* Slows down button press */
+}
+
+.modal-button:hover {
   transform: scale(1.05);
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+
+/* Keyframes for animation */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 
-/* Logo Spin Animation */
-@keyframes logo-spin {
+@keyframes scaleUp {
+  to {
+    transform: scale(1);
+  }
+}
+
+/* app.css */
+
+/* Add closing animation for modal content */
+.modal-content.closing {
+  animation: scaleDown 0.7s forwards ease-in-out;
+}
+
+/* Add fading animation for modal overlay */
+.modal-overlay.fading {
+  animation: fadeOut 0.7s forwards ease-in-out;
+}
+
+/* Keyframes for closing animations */
+@keyframes scaleDown {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.95);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* app.css */
+
+/* General closing animation for boxes */
+.closing {
+  animation: fadeOut 0.7s forwards ease-in-out;
+}
+
+/* Specific animations for each box */
+.order-summary-box, .checkout-box, .order-confirmation-box {
+  animation: scaleUp 0.7s forwards ease-in-out;
+}
+
+/* Keyframes for animations */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* app.css */
+
+/* Loader animation */
+.loader {
+  border-color: #4a5568;
+  border-top-color: #2d3748;
+  animation: spin 1s linear infinite;
+}
+
+/* Keyframes for spinning animation */
+@keyframes spin {
   from {
     transform: rotate(0deg);
   }
@@ -35,136 +168,462 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+/* app.css */
+
+/* Custom loader animation */
+.custom-loader {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e28400;
+  border-top: 4px solid #4a5568;
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite;
+}
+
+/* Keyframes for the spinner */
+@keyframes spin {
+  0% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 
-/* Card Styling */
-.card {
-  padding: 2em;
-  background-color: #1f2937;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 300ms, box-shadow 300ms;
-}
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+/* app.css */
+
+/* Custom loader animation */
+.custom-loader {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #fff;
+  border-top: 4px solid #4a5568;
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite;
 }
 
-/* Text for Links */
-.read-the-docs {
-  color: #888;
-  font-size: 0.9em;
+/* Keyframes for the spinner */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-/* Transition Effects for Page Navigation */
-.fade-enter {
+/* Smooth opacity transitions */
+.transition-opacity {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Scale transitions for buttons */
+.transition-transform {
+  transition: transform 0.5s ease-in-out;
+}
+
+
+/* app.css */
+
+/* Custom loader animation */
+.custom-loader {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #fff;
+  border-top: 4px solid #4a5568;
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite;
+}
+
+/* Keyframes for the spinner */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Smooth opacity transitions */
+.order-confirmation-box.loading {
   opacity: 0;
-  transform: scale(0.95);
+  transition: opacity 0.7s ease-in-out;
 }
 
-.fade-enter-active {
+.order-confirmation-box.loaded {
   opacity: 1;
-  transform: scale(1);
-  transition: opacity 500ms ease-in, transform 500ms ease-in;
+  transition: opacity 0.7s ease-in-out;
 }
 
-.fade-exit {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.fade-exit-active {
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity 500ms ease-out, transform 500ms ease-out;
-}
-
-/* Button Styling */
-button {
-  background-color: #3b82f6;
-  color: #ffffff;
-  padding: 0.75em 1.5em;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 300ms, transform 300ms;
-}
-button:hover {
-  background-color: #2563eb;
-  transform: scale(1.05);
-}
-
-button:active {
-  transform: scale(0.95);
-}
-
-/* Footer Styling */
-footer {
-  padding: 20px;
-  text-align: center;
-  color: #888;
-  font-size: 0.9em;
-  border-top: 1px solid #2d3748;
-  background-color: #1f2937;
-  color: #fff;
-}
-
-/* Footer Links */
-footer a {
-  color: #3b82f6;
-  text-decoration: none;
-}
-footer a:hover {
-  text-decoration: underline;
-}
-
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-  .container {
-    padding: 10px;
-  }
-
-  .logo {
-    height: 4em;
-  }
-
-  .card {
-    padding: 1.5em;
-  }
-
-  /* Make Footer Items Centered */
-  footer {
-    text-align: center;
-  }
-
-  /* Adjust Navigation and Sidebar for Mobile */
-  .menu-nav {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  
-
-/* Footer Adjustments */
-footer {
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 20px;
-  background-color: #1f2937;
-  color: #fff;
-  text-align: center;
+  opacity: 0;
+  transition: opacity 0.7s ease-in-out;
 }
 
-/* Sidebar Adjustments */
-.sidebar {
-  padding: 10px;
+.modal-overlay.show-modal {
+  opacity: 1;
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #2d3748;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  transform: scale(0.95);
+  transition: transform 0.7s ease-in-out;
+}
+
+.modal-overlay.show-modal .modal-content {
+  transform: scale(1);
+}
+
+
+
+
+/* app.css */
+
+/* Custom loader animation */
+.custom-loader {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #fff;
+  border-top: 4px solid #4a5568;
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite;
+}
+
+/* Keyframes for the spinner */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Smooth opacity transitions */
+.transition-opacity {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Smooth scale transitions */
+.transition-transform {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Modal scale effect */
+.scale-95 {
+  transform: scale(0.95);
+}
+
+
+/* app.css */
+
+/* Custom loader animation */
+.custom-loader {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #fff;
+  border-top: 4px solid #4a5568;
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite;
+}
+
+/* Keyframes for the spinner */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Smooth opacity transitions */
+.transition-opacity {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Smooth scale transitions */
+.transition-transform {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Modal scale effect */
+.scale-95 {
+  transform: scale(0.95);
+}
+
+/* Smooth opacity transitions */
+.transition-opacity {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Smooth scale transitions */
+.transition-transform {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Modal scale effect */
+.scale-95 {
+  transform: scale(0.95);
+}
+
+.scale-100 {
+  transform: scale(1);
+}
+
+
+
+/* Custom modal content styles for smooth transitions */
+.modal-content {
   background-color: #2d3748;
   color: #fff;
-  margin-top: 10px;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  max-width: 600px;
+  width: 100%;
+  transform: scale(0.95);
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+/* Scale up smoothly */
+.modal-content.scale-100 {
+  transform: scale(1);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-overlay.show-modal {
+  animation: fadeIn 0.7s ease-in-out forwards;
+}
+
+/* Scale down smoothly when closing */
+.modal-content.closing {
+  animation: scaleDown 0.5s forwards ease-in-out;
+}
+
+@keyframes scaleDown {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.95);
+  }
+}
+
+
+/* Smooth opacity transitions */
+.transition-opacity {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Smooth scale transitions */
+.transition-transform {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Modal scale effect */
+.scale-95 {
+  transform: scale(0.95);
+}
+
+/* Custom modal content styles for smooth transitions */
+.modal-content {
+  background-color: #2d3748;
+  color: #fff;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  max-width: 600px;
+  width: 100%;
+  transform: scale(0.95);
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+/* Scale up smoothly */
+.modal-content.scale-100 {
+  transform: scale(1);
+}
+
+
+/* Modal fade-in effect */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal fade-out effect */
+.fade-out {
+  opacity: 1;
+  animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Smooth opacity transitions */
+.transition-opacity {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Smooth scale transitions */
+.transition-transform {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Modal scale effect */
+.scale-95 {
+  transform: scale(0.95);
+}
+
+
+/* Modal fade-in effect */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal fade-out effect */
+.fade-out {
+  opacity: 1;
+  animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Smooth opacity transitions */
+.transition-opacity {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Smooth scale transitions */
+.transition-transform {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Modal scale effect */
+.scale-95 {
+  transform: scale(0.95);
+}
+
+
+/* Modal fade-in effect */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal fade-out effect */
+.fade-out {
+  opacity: 1;
+  animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Smooth opacity transitions */
+.transition-opacity {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Smooth scale transitions */
+.transition-transform {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Modal scale effect */
+.scale-95 {
+  transform: scale(0.95);
+}
+
+
+/* Smooth scale transitions */
+.transition-transform {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Hover effects for social media icons */
+.hover\:scale-110:hover {
+  transform: scale(1.1);
+}
+
+/* Hover effects for links */
+.transition-colors {
+  transition: color 0.3s ease-in-out;
+}
+
+
+/* Modal closing animation */
+.modal-content.closing {
+  animation: scaleDown 0.7s forwards ease-in-out;
+}
+
+.modal-overlay.fading {
+  animation: fadeOut 0.7s forwards ease-in-out;
+}
+
+/* Keyframes for closing animations */
+@keyframes scaleDown {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

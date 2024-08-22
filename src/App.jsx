@@ -18,12 +18,14 @@ import OrderNow from './OrderNow';
 import Footer from './Footer';
 import ContactUs from './ContactUs';
 import AboutUs from './AboutUs';
-import { CartProvider } from './CartContext'; 
+import { CartProvider } from './CartContext';
 
+import './app.css'
 function App() {
     const [cart, setCart] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const [isDarkMode, setIsDarkMode] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         if (isDarkMode) {
@@ -68,23 +70,27 @@ function App() {
         setCart([]);
     };
 
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+    };
+
     return (
         <CartProvider> {/* Wrap your entire app with CartProvider */}
             <Router> {/* Ensure everything is wrapped within Router */}
                 
-                <div className={`min-h-screen ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}>
-                    <Header toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
+                <div className={`min-h-screen ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-300 text-black'}`}>
+                    <Header toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} onSearch={handleSearch} />
                     <MenuNav />
                     <div className="container mx-auto p-6 flex flex-col md:flex-row ">
                         <div className="w-full md:w-3/4 pr-0 md:pr-10">
                             <Routes>
-                                <Route path="/main-dish" element={<MainDish openDetail={openDetail} />} />
-                                <Route path="/family-style-meals" element={<FamilyStyleMeals openDetail={openDetail} />} />
-                                <Route path="/appetizers" element={<Appetizers openDetail={openDetail} />} />
-                                <Route path="/classic-entrees" element={<ClassicEntrees openDetail={openDetail} />} />
-                                <Route path="/amazing-alfredos" element={<AmazingAlfredos openDetail={openDetail} />} />
-                                <Route path="/soups-salads-breadsticks" element={<SoupsSaladsBreadsticks openDetail={openDetail} />} />
-                                <Route path="/drinking" element={<Drinking openDetail={openDetail} />} />
+                                <Route path="/main-dish" element={<MainDish openDetail={openDetail} searchQuery={searchQuery} />} />
+                                <Route path="/family-style-meals" element={<FamilyStyleMeals openDetail={openDetail} searchQuery={searchQuery} />} />
+                                <Route path="/appetizers" element={<Appetizers openDetail={openDetail} searchQuery={searchQuery} />} />
+                                <Route path="/classic-entrees" element={<ClassicEntrees openDetail={openDetail} searchQuery={searchQuery} />} />
+                                <Route path="/amazing-alfredos" element={<AmazingAlfredos openDetail={openDetail} searchQuery={searchQuery} />} />
+                                <Route path="/soups-salads-breadsticks" element={<SoupsSaladsBreadsticks openDetail={openDetail} searchQuery={searchQuery} />} />
+                                <Route path="/drinking" element={<Drinking openDetail={openDetail} searchQuery={searchQuery} />} />
                                 <Route path="/checkout" element={<Checkout cart={cart} onPlaceOrder={handlePlaceOrder} />} />
                                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
                                 <Route path="/about" element={<AboutUs />} />

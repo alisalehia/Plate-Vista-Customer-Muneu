@@ -12,10 +12,16 @@ const OrderConfirmation = () => {
     const [reviewTitle, setReviewTitle] = useState('');
     const [reviewText, setReviewText] = useState('');
     const [rating, setRating] = useState(0);
+    const [isLoading, setIsLoading] = useState(true); // Loading state
 
     useEffect(() => {
         if (!state || !state.cart || state.cart.length === 0) {
             navigate('/main-dish');
+        } else {
+            // Simulate a loading delay before showing the confirmation
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 1500); // 1.5 second delay to simulate processing
         }
     }, [state, navigate]);
 
@@ -65,58 +71,66 @@ const OrderConfirmation = () => {
     };
 
     return (
-        <div className="bg-gray-700 text-white p-4 rounded-lg max-w-lg mx-auto">
-            <h2 className="text-2xl font-bold mb-4">Order Confirmation</h2>
-            <p>Thank you, {state.name}!</p>
-            <p>Your order has been placed successfully.</p>
-            <div className="mt-4">
-                <h3 className="text-lg font-bold mb-2">Order Summary:</h3>
-                <ul>
-                    {state.cart.map((item, index) => (
-                        <li key={index}>
-                            {item.name} (x{item.quantity}) - ${item.price.toFixed(2)}
-                        </li>
-                    ))}
-                </ul>
-                <div className="mt-2">
-                    <strong>Total:</strong> $
-                    {state.cart
-                        .reduce((acc, item) => acc + item.price * item.quantity, 0)
-                        .toFixed(2)}
+        <div className={`order-confirmation-box bg-gray-700 text-white p-4 rounded-lg max-w-lg mx-auto ${isLoading ? 'loading' : 'loaded'}`}>
+            {isLoading ? (
+                <div className="flex justify-center items-center h-32">
+                    <div className="custom-loader"></div>
                 </div>
-            </div>
-            <div className="mt-4">
-                <p><strong>Order Number:</strong> #{orderNumber}</p>
-                <p><strong>Table Number:</strong> {state.tableNumber}</p>
-                <p><strong>Payment Method:</strong> {state.paymentMethod === 'card' ? 'Card' : state.paymentMethod === 'applePay' ? 'Apple Pay' : 'Cash'}</p>
-                {(state.paymentMethod === 'card' || state.paymentMethod === 'applePay') && (
-                    <div className="mt-4 text-green-500">
-                        <p><strong>Payment Status:</strong> Payment Successful</p>
+            ) : (
+                <>
+                    <h2 className="text-2xl font-bold mb-4">Order Confirmation</h2>
+                    <p>Thank you, {state.name}!</p>
+                    <p>Your order has been placed successfully.</p>
+                    <div className="mt-4">
+                        <h3 className="text-lg font-bold mb-2">Order Summary:</h3>
+                        <ul>
+                            {state.cart.map((item, index) => (
+                                <li key={index}>
+                                    {item.name} (x{item.quantity}) - ${item.price.toFixed(2)}
+                                </li>
+                            ))}
+                        </ul>
+                        <div className="mt-2">
+                            <strong>Total:</strong> $
+                            {state.cart
+                                .reduce((acc, item) => acc + item.price * item.quantity, 0)
+                                .toFixed(2)}
+                        </div>
                     </div>
-                )}
-            </div>
-            <div className="mt-4 flex space-x-4">
-                <button
-                    onClick={handleFeedbackClick}
-                    className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded">
-                    Feedback
-                </button>
-                <button
-                    onClick={handleHelpClick}
-                    className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded">
-                    Need Help
-                </button>
-                <button
-                    onClick={handleReceiptDownload}
-                    className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded">
-                    Download Receipt
-                </button>
-            </div>
+                    <div className="mt-4">
+                        <p><strong>Order Number:</strong> #{orderNumber}</p>
+                        <p><strong>Table Number:</strong> {state.tableNumber}</p>
+                        <p><strong>Payment Method:</strong> {state.paymentMethod === 'card' ? 'Card' : state.paymentMethod === 'applePay' ? 'Apple Pay' : 'Cash'}</p>
+                        {(state.paymentMethod === 'card' || state.paymentMethod === 'applePay') && (
+                            <div className="mt-4 text-green-500">
+                                <p><strong>Payment Status:</strong> Payment Successful</p>
+                            </div>
+                        )}
+                    </div>
+                    <div className="mt-4 flex space-x-4">
+                        <button
+                            onClick={handleFeedbackClick}
+                            className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded transition-transform duration-500 ease-in-out transform hover:scale-105">
+                            Feedback
+                        </button>
+                        <button
+                            onClick={handleHelpClick}
+                            className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded transition-transform duration-500 ease-in-out transform hover:scale-105">
+                            Need Help
+                        </button>
+                        <button
+                            onClick={handleReceiptDownload}
+                            className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded transition-transform duration-500 ease-in-out transform hover:scale-105">
+                            Download Receipt
+                        </button>
+                    </div>
+                </>
+            )}
 
             {/* Feedback Modal */}
             {showFeedbackModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-                    <div className="bg-gray-800 p-4 rounded-lg max-w-sm w-full">
+                <div className="modal-overlay show-modal">
+                    <div className="modal-content">
                         <h3 className="text-xl font-bold mb-4">Rate Your Experience</h3>
                         <div className="mb-2">
                             <label className="block text-sm font-medium">Rating:</label>
@@ -154,12 +168,12 @@ const OrderConfirmation = () => {
                         <div className="flex justify-end space-x-2">
                             <button
                                 onClick={() => setShowFeedbackModal(false)}
-                                className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded">
+                                className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded transition-transform duration-500 ease-in-out transform hover:scale-105">
                                 Cancel
                             </button>
                             <button
                                 onClick={submitFeedback}
-                                className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded">
+                                className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded transition-transform duration-500 ease-in-out transform hover:scale-105">
                                 Submit
                             </button>
                         </div>
@@ -169,14 +183,14 @@ const OrderConfirmation = () => {
 
             {/* Thank You Modal */}
             {showThankYouModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-                    <div className="bg-gray-800 p-4 rounded-lg max-w-sm w-full">
+                <div className="modal-overlay show-modal">
+                    <div className="modal-content">
                         <h3 className="text-xl font-bold mb-4">Thank You!</h3>
                         <p>Your feedback has been submitted successfully.</p>
                         <div className="flex justify-end mt-4">
                             <button
                                 onClick={() => setShowThankYouModal(false)}
-                                className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded">
+                                className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded transition-transform duration-500 ease-in-out transform hover:scale-105">
                                 Close
                             </button>
                         </div>
@@ -186,14 +200,14 @@ const OrderConfirmation = () => {
 
             {/* Help Modal */}
             {showHelpModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-                    <div className="bg-gray-800 p-4 rounded-lg max-w-sm w-full">
+                <div className="modal-overlay show-modal">
+                    <div className="modal-content">
                         <h3 className="text-xl font-bold mb-4">Need Help?</h3>
                         <p>Customer service will reach out to you soon!</p>
                         <div className="flex justify-end mt-4">
                             <button
                                 onClick={() => setShowHelpModal(false)}
-                                className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded">
+                                className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded transition-transform duration-500 ease-in-out transform hover:scale-105">
                                 Close
                             </button>
                         </div>

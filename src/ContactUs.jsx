@@ -9,7 +9,7 @@ function ContactUs() {
         message: '',
     });
     const [showConfirmation, setShowConfirmation] = useState(false);
-    const navigate = useNavigate();  // Initialize the useNavigate hook
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -26,8 +26,13 @@ function ContactUs() {
     };
 
     const handleCloseConfirmation = () => {
-        setShowConfirmation(false);
-        navigate('/');  // Redirect to the home page after closing the confirmation
+        // Add a class to trigger the fade-out animation
+        document.getElementById('confirmation-modal').classList.add('fade-out');
+
+        setTimeout(() => {
+            setShowConfirmation(false);
+            navigate('/');  // Redirect to the home page after closing the confirmation
+        }, 500); // Allow time for the fade-out animation
     };
 
     return (
@@ -109,7 +114,7 @@ function ContactUs() {
 
                 <button
                     type="submit"
-                    className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+                    className="bg-green-500 hover:bg-green-600 text-white font- py-2 px-4 rounded"
                 >
                     Send Message
                 </button>
@@ -117,13 +122,16 @@ function ContactUs() {
 
             {/* Confirmation Modal */}
             {showConfirmation && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+                <div
+                    id="confirmation-modal"
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity duration-500 ease-in-out fade-in"
+                >
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96 transform transition-transform duration-500 ease-in-out scale-95">
                         <h3 className="text-xl font-semibold mb-4">Thank you for your inquiry!</h3>
                         <p>We will get back to you soon.</p>
                         <button
                             onClick={handleCloseConfirmation}
-                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4"
+                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4 transition-transform duration-500 ease-in-out transform hover:scale-105"
                         >
                             Close
                         </button>

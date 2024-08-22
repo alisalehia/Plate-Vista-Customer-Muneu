@@ -26,16 +26,34 @@ function MenuDetail({ item, addToCart, closeDetail }) {
       capacity: item.category === 'Drinking' ? capacity : null,
       price: item.category === 'Drinking' ? price * quantity : item.price * quantity,
     });
-    closeDetail(); // Close the detail view after adding to cart
+
+    // Trigger the close animation
+    triggerCloseAnimation();
+  };
+
+  const triggerCloseAnimation = () => {
+    const modalContent = document.querySelector('.modal-content');
+    const modalOverlay = document.querySelector('.modal-overlay');
+
+    if (modalContent && modalOverlay) {
+      modalContent.classList.add('closing');
+      modalOverlay.classList.add('fading');
+
+      setTimeout(() => {
+        closeDetail(); // Close the modal after the animation completes
+      }, 700); // Match this duration with your CSS animation duration for smoothness
+    } else {
+      closeDetail(); // Fallback in case the elements are not found
+    }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-      <div className="bg-gray-800 text-white p-8 rounded-lg max-w-lg w-full">
-        <button className="text-right text-lg mb-4" onClick={closeDetail}>
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <button className="modal-close" onClick={triggerCloseAnimation}>
           Close
         </button>
-        <img src="https://via.placeholder.com/300x200" alt={item.name} className="w-full h-40 object-cover rounded-lg mb-4" />
+        <img src="https://via.placeholder.com/300x200" alt={item.name} className="modal-image" />
         <h3 className="text-2xl mb-2">{item.name}</h3>
         <p className="text-sm mb-4">{item.description}</p>
         <p className="text-lg mb-4">${(item.category === 'Drinking' ? price : item.price).toFixed(2)}</p>
@@ -47,7 +65,7 @@ function MenuDetail({ item, addToCart, closeDetail }) {
             <select
               value={capacity}
               onChange={handleCapacityChange}
-              className="bg-gray-700 text-white border rounded p-1 w-full"
+              className="modal-select"
             >
               <option value="300ml">300ml - ${item.price.toFixed(2)}</option>
               <option value="500ml">500ml - ${(item.price + 2).toFixed(2)}</option>
@@ -62,12 +80,12 @@ function MenuDetail({ item, addToCart, closeDetail }) {
             min="1"
             value={quantity}
             onChange={handleQuantityChange}
-            className="bg-gray-700 text-white border rounded p-1 w-16"
+            className="modal-input"
           />
         </div>
         <button
           onClick={handleAddToCart}
-          className="bg-orange-500 text-white px-4 py-2 rounded mt-2"
+          className="modal-button"
         >
           Add to Cart
         </button>
