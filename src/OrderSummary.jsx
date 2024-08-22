@@ -1,9 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from './CartContext';
 
-const OrderSummary = ({ cart }) => {
+const OrderSummary = () => {
     const navigate = useNavigate();
-
+    const {cart} = useCart();
     const handleCheckout = () => {
         if (cart.length === 0) {
             alert("Your cart is empty!");
@@ -29,8 +30,8 @@ const OrderSummary = ({ cart }) => {
             ) : (
                 <ul>
                     {cart.map(item => (
-                        <li key={item.id}>
-                            {item.name} (x{item.quantity}) - ${(item.price * item.quantity).toFixed(2)}
+                        <li key={item._id}>
+                            {item.title} (x{item.quantity}) - ${(item.price * item.quantity).toFixed(2)}
                         </li>
                     ))}
                 </ul>

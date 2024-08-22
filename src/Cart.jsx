@@ -1,7 +1,10 @@
 // src/Cart.jsx
 import React from 'react';
+import { useCart } from './CartContext';
 
-function Cart({ cart, removeFromCart }) {
+function Cart() {
+  const { cart, removeFromCart } = useCart();
+  console.log(cart);
   return (
     <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg mb-4 shadow-md">
       <h2 className="text-xl font-bold mb-4">Your Cart</h2>
@@ -9,15 +12,15 @@ function Cart({ cart, removeFromCart }) {
         <p>Your cart is empty.</p>
       ) : (
         cart.map(item => (
-          <div key={item.id} className="flex justify-between mb-4">
+          <div key={item._id} className="flex justify-between mb-4">
             <div>
-              <p>{item.name}</p>
-              <p>Unit Price: ${item.price.toFixed(2)}</p>
+              <p>{item.title}</p>
+              <p>Unit Price: ${item.price}</p>
               <p>Quantity: {item.quantity}</p>
             </div>
             <button
               className="text-red-500"
-              onClick={() => removeFromCart(item.id)}
+              onClick={() => removeFromCart(item._id)}
             >
               Remove
             </button>

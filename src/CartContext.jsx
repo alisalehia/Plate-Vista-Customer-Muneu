@@ -12,15 +12,13 @@ export function CartProvider({ children }) {
 
   const addToCart = (item) => {
     setCart((prevCart) => {
-      const existingItemIndex = prevCart.findIndex(cartItem => cartItem.id === item.id);
+      const itemExistIndex = prevCart.findIndex((i) => i._id === item._id);
+   
 
-      if (existingItemIndex > -1) {
-        // Update the quantity of the existing item
+      if (itemExistIndex !== -1) {
+        // If the item already exists in the cart, update the quantity
         const updatedCart = [...prevCart];
-        updatedCart[existingItemIndex] = {
-          ...updatedCart[existingItemIndex],
-          quantity: updatedCart[existingItemIndex].quantity + item.quantity,
-        };
+        updatedCart[itemExistIndex].quantity += item.quantity;
         return updatedCart;
       } else {
         // Add the new item to the cart
@@ -29,8 +27,9 @@ export function CartProvider({ children }) {
     });
   };
 
+
   const removeFromCart = (itemId) => {
-    setCart((prevCart) => prevCart.filter(item => item.id !== itemId));
+    setCart((prevCart) => prevCart.filter(item => item._id !== itemId));
   };
 
   const clearCart = () => {

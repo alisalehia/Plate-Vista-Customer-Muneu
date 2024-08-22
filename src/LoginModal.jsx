@@ -1,17 +1,41 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 function LoginModal({ onClose }) {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState('');
+  const [user, setUser] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (isLogin) {
       console.log('Logging in with:', username, password);
+      try{
+        const { data} = await axios.post('https://plate-vista-api.vercel.app/api/v1/auth/login', {
+          username,
+          password,
+        });
+        console.log(data.username);
+        setUser(data.username);
+      }catch(error){
+        console.log(error);
+      }
     } else {
       console.log('Signing up with:', username, email, password);
+      try{
+        const { data} = await axios.post('https://plate-vista-api.vercel.app/api/v1/users', {
+          username,
+          email,
+          password,
+        });
+        console.log(data.username);
+        setUser(data.username);
+        console.log(user);
+      }catch(error){
+        console.log(error);
+      }
     }
     handleClose(); // Use handleClose for smooth transition
   };
