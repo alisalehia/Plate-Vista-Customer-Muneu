@@ -2,7 +2,7 @@ import React from 'react';
 
 function MenuItem({ title, price, calories, imageUrl }) {
   return (
-    <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition">
+    <div className="p-4 bg-white dark:bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition">
       <img src={imageUrl} alt={title} className="h-40 w-full object-cover rounded-t-lg" />
       <div className="p-4">
         <h2 className="text-lg font-bold">{title}</h2>

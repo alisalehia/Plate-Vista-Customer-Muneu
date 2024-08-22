@@ -2,7 +2,7 @@ import React from 'react';
 
 function Footer() {
     return (
-        <footer className="bg-gray-100 dark:bg-gray-800 py-0 shadow-md border-t border-gray-100 dark:border-gray-600 pt-0">
+        <footer className="bg-gray-300 dark:bg-gray-800 py-0 shadow-md border-t border-gray-100 dark:border-gray-600 pt-0">
             <div className="container mx-auto px-10">
                 <div className="flex flex-col space-y-6">
                     
@@ -16,7 +16,15 @@ function Footer() {
             className="w-20 h-20 transition-transform transform group-hover:scale-105"
           />
         </a>
-                            <h1 className="text-4xl font-bold dark:text-gray-600">PlateVista</h1>
+                           <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-500">
+            PlateVista
+          </h1>
+          <p className="text-sm text-gray-600 dark:text-gray-500">
+            Deliciousness delivered
+          </p>
+        </div>
+                            
                         </div>
                     </div>
 
