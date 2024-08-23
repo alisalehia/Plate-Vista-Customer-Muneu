@@ -1,5 +1,5 @@
 // src/CartContext.jsx
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const CartContext = createContext();
 
@@ -8,12 +8,17 @@ export function useCart() {
 }
 
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(
+    localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : []
+  );
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   const addToCart = (item) => {
     setCart((prevCart) => {
       const itemExistIndex = prevCart.findIndex((i) => i._id === item._id);
-   
 
       if (itemExistIndex !== -1) {
         // If the item already exists in the cart, update the quantity
@@ -27,9 +32,8 @@ export function CartProvider({ children }) {
     });
   };
 
-
   const removeFromCart = (itemId) => {
-    setCart((prevCart) => prevCart.filter(item => item._id !== itemId));
+    setCart((prevCart) => prevCart.filter((item) => item._id !== itemId));
   };
 
   const clearCart = () => {
@@ -37,7 +41,9 @@ export function CartProvider({ children }) {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeFromCart, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );

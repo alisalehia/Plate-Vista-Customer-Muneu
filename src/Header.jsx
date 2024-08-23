@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import LoginModal from "./LoginModal";
-import "./ToggleSwitch.css"; // Ensure your CSS for the toggle switch is imported
+import "./ToggleSwitch.css";
+import { useAuth } from "./context/AuthContext"; // Ensure your CSS for the toggle switch is imported
 
 function Header({ toggleDarkMode, isDarkMode, onSearch }) {
+  const { user, logout, authToken } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
@@ -78,12 +80,26 @@ function Header({ toggleDarkMode, isDarkMode, onSearch }) {
         </a>
 
         {/* Login Button */}
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="text-orange-500 dark:text-orange-400 hover:text-orange-600 text-sm"
-        >
-          Login
-        </button>
+        {user && authToken ? (
+          <div className="flex items-center space-x-3">
+            <span className="text-gray-900 dark:text-white text-sm font-semibold">
+              {user}
+            </span>
+            <button
+              onClick={() => logout()}
+              className="text-orange-500 dark:text-orange-400 hover:text-orange-600 text-sm"
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="text-orange-500 dark:text-orange-400 hover:text-orange-600 text-sm"
+          >
+            Login
+          </button>
+        )}
 
         {/* Dark Mode Toggle */}
         <div className="toggle-switch" onClick={toggleDarkMode}>

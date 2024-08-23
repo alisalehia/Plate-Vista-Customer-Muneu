@@ -17,15 +17,43 @@ import OrderNow from "./OrderNow";
 import Footer from "./Footer";
 import ContactUs from "./ContactUs";
 import AboutUs from "./AboutUs";
-import { CartProvider } from "./CartContext";
-
+import { CartProvider } from "./context/CartContext";
+import { useWebSocketContext } from "./context/WebSocketContext";
 import "./app.css";
 import MainCategoryContainer from "../MainCategoryContainer";
+import { useAuth } from "./context/AuthContext";
+
 function App() {
+  const { sendMessage, messages, readyState, lastMessage } =
+    useWebSocketContext();
+  const { authToken, logout } = useAuth();
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [categories, setCategories] = useState([]);
+  const [ user , setUser ] = useState(null);
+  useEffect(() => {
+    const authUser = async (token) => {
+      try {
+        const response = await axios.get(
+          `https://plate-vista-api.vercel.app/api/v1/auth/user`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status != 200) {
+          logout();
+        }
+        setUser(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    authUser(authToken);
+  }, [authToken]);
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -82,44 +110,63 @@ function App() {
             isDarkMode ? "bg-gray-800 text-white" : "bg-gray-300 text-black"
           }`}
         >
-          <Header
-            toggleDarkMode={toggleDarkMode}
-            isDarkMode={isDarkMode}
-            onSearch={handleSearch}
-          />
-          <MenuNav categories={categories} />
-          <div className="container mx-auto p-6 flex flex-col md:flex-row ">
-            <div className="w-full md:w-3/4 pr-0 md:pr-10">
-              <Routes>
-                {categories?.map((category) => (
+          <div className="max-w-screen-xl mx-auto">
+            <Header
+              toggleDarkMode={toggleDarkMode}
+              isDarkMode={isDarkMode}
+              onSearch={handleSearch}
+            />
+            <MenuNav categories={categories} />
+            <div className="container mx-auto p-6 flex flex-col md:flex-row ">
+              <div className="w-full md:w-3/4 pr-0 md:pr-10">
+                <span className="text-center text-white">
+                  {" "}
+                  {readyState === 0
+                    ? "Connecting..."
+                    : readyState === 1
+                    ? "Connected"
+                    : "Disconnected"}{" "}
+                </span>
+                <Routes>
+                  {categories?.map((category) => (
+                    <Route
+                      key={category}
+                      path={`/${category}`}
+                      element={
+                        <MainCategoryContainer
+                          categoryName={category}
+                          openDetail={openDetail}
+                          searchQuery={searchQuery}
+                        />
+                      }
+                    />
+                  ))}
+                  {/* Add Routes Here */}
+                  <Route path="/" element={<Navigate to="/beer" />} />
                   <Route
-                    key={category}
-                    path={`/${category}`}
-                    element={<MainCategoryContainer categoryName={category} openDetail={openDetail} searchQuery={searchQuery} />}
+                    path="/order-confirmation"
+                    element={<OrderConfirmation />}
                   />
-                ))}
-                {/* Add Routes Here */}
-                <Route path="/" element={<Navigate to="/beer" />} />
-                <Route path="/order-confirmation" element={<OrderConfirmation />} />
-                <Route path="/checkout" element={<Checkout onPlaceOrder={handlePlaceOrder} />} />
-                <Route path="/contact-us" element={<ContactUs />} />
-                <Route path="/about-us" element={<AboutUs />} />
-              </Routes>
+                  <Route
+                    path="/checkout"
+                    element={<Checkout onPlaceOrder={handlePlaceOrder} />}
+                  />
+                  <Route path="/contact" element={<ContactUs />} />
+                  <Route path="/about" element={<AboutUs />} />
+                </Routes>
+              </div>
+              <div className="w-full md:w-1/4 flex flex-col space-y-4 mt-6 md:mt-0 ">
+                <Cart />
+                <OrderSummary />
+              </div>
             </div>
-            <div className="w-full md:w-1/4 flex flex-col space-y-4 mt-6 md:mt-0 ">
-              <Cart />
-              <OrderSummary />
-            </div>
+            <OrderNow user={user} />
+            <Footer />
           </div>
-          <OrderNow  />
-          <Footer />
+          {selectedItem && (
+            <MenuDetail item={selectedItem} closeDetail={closeDetail} />
+          )}
         </div>
-        {selectedItem && (
-          <MenuDetail
-            item={selectedItem}
-            closeDetail={closeDetail}
-          />
-        )}
       </Router>
     </CartProvider>
   );
