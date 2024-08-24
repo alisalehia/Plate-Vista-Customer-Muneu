@@ -5,7 +5,7 @@ const OrderItem = ({ item}) => {
      {    item.menuItems.map((menuItem) => (
             <li key={menuItem._id}>
               {menuItem.product.title} (x{menuItem.quantity}) - $
-              {menuItem.product.price.toFixed(2)}
+              {menuItem.product.price}
             </li>
           ))}
     </div>

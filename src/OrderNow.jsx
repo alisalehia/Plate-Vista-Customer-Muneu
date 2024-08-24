@@ -43,7 +43,7 @@ const OrderNow = ({ user }) => {
       JSON.stringify({
         type: "newOrder",
         payload: {
-          user: user?.user.id,
+          user: user?.user.id || null,
           menuItems: menuItemsForSend,
         },
       })
@@ -61,7 +61,6 @@ const OrderNow = ({ user }) => {
     // Simulate a delay for loading
     setTimeout(() => {
       setIsLoading(false);
-      setIsConfirmationOpen(true);
     }, 1500); // 1.5 seconds delay
   };
 
