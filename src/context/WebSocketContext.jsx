@@ -6,11 +6,12 @@ const WebSocketContext = createContext();
 export const WebSocketProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [tableNum, setTableNum] = useState(1);
+  const [userId, setUserId] = useState(null);
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     `wss://plate-vista-api.onrender.com/ws`,
     {
-      queryParams: { tableNum },
+      queryParams: { tableNum , userId},
       onOpen: () => console.log("Connected to WebSocket"),
       onClose: () => console.log("WebSocket connection closed"),
       onError: (event) => console.error("WebSocket error:", event),
@@ -24,7 +25,7 @@ export const WebSocketProvider = ({ children }) => {
 
   return (
     <WebSocketContext.Provider
-      value={{ sendMessage, messages, readyState, lastMessage }}
+      value={{ sendMessage, messages, readyState, lastMessage, setUserId }}
     >
       {children}
     </WebSocketContext.Provider>

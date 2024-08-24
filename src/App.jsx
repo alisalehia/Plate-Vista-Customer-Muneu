@@ -31,7 +31,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [categories, setCategories] = useState([]);
-  const [ user , setUser ] = useState(null);
+  const [user, setUser] = useState(null);
   useEffect(() => {
     const authUser = async (token) => {
       try {
@@ -46,8 +46,9 @@ function App() {
 
         if (response.status != 200) {
           logout();
+        } else {
+          setUser(response.data);
         }
-        setUser(response.data);
       } catch (err) {
         console.log(err);
       }

@@ -1,10 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "./context/CartContext";
+import OrderItem from "./OrderItem";
+import { timeSinceOrder } from "./utils/utils";
 
 const OrderSummary = () => {
   const navigate = useNavigate();
-  const { cart } = useCart();
+  const { cart, orders } = useCart();
   const handleCheckout = () => {
     if (cart.length === 0) {
       alert("Your cart is empty!");
@@ -20,26 +22,23 @@ const OrderSummary = () => {
     }, 700); // Match this duration with your CSS animation duration for smoothness
   };
 
-  const totalPrice = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  const totalPrice = orders.reduce((total, item) => total + item.totalPrice, 0);
 
   return (
     <div className="order-summary-box bg-gray-100 dark:bg-gray-700 p-4 rounded-lg mb-4 shadow-md">
       <h2 className="text-xl mb-4 font-bold">Order Summary</h2>
-      {cart.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <ul>
-          {cart.map((item) => (
-            <li key={item._id}>
-              {item.title} (x{item.quantity}) - $
-              {(item.price * item.quantity).toFixed(2)}
-            </li>
-          ))}
-        </ul>
-      )}
+
+      <ul className="flex flex-col space-y-2">
+        {orders?.map((item) => (
+          <div className="border p-3 space-y-1 rounded-lg">
+            <span className="text-[0.785rem] tracking-wider">
+              {item.orderStatus}
+            </span>
+            <OrderItem key={item._id} item={item} />
+            <span className='text-[0.785rem] font-semibold opacity-80'>{timeSinceOrder(item.createdAt)}</span>
+          </div>
+        ))}
+      </ul>
       <p className="mt-4 font-bold">Total: ${totalPrice.toFixed(2)}</p>
       <button
         onClick={handleCheckout}

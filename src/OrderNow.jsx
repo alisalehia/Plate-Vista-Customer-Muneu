@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "./context/CartContext";
 import { useWebSocketContext } from "./context/WebSocketContext";
 
 const OrderNow = ({ user }) => {
-  const { sendMessage, messages, readyState, lastMessage } =
+  const { sendMessage, messages, readyState, lastMessage, setUserId } =
     useWebSocketContext();
-  const { cart } = useCart();
+
+  const { cart, clearCart, addOrder, orders } = useCart();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isThankYouOpen, setIsThankYouOpen] = useState(false);
@@ -15,23 +16,38 @@ const OrderNow = ({ user }) => {
   const [review, setReview] = useState("");
   const [tableNumber] = useState(Math.floor(Math.random() * 100) + 1);
   const navigate = useNavigate();
- 
+
+  useEffect(() => {
+    if (user) {
+      setUserId(user.user.id);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (lastMessage) {
+      const messageData = JSON.parse(lastMessage.data);
+      if (messageData.type === "orderSuccess") {
+        console.log(messageData);
+        addOrder(messageData.payload);
+        clearCart();
+      }
+    }
+  }, [lastMessage]);
+
   const handleSendMessages = () => {
     const menuItemsForSend = cart.map((item) => {
       return { product: item._id, quantity: item.quantity };
     });
 
-    
-      sendMessage(
-        JSON.stringify({
-          type: "newOrder",
+    sendMessage(
+      JSON.stringify({
+        type: "newOrder",
+        payload: {
           user: user?.user.id,
-          payload: {
-            menuItems: menuItemsForSend,
-          },
-        })
-      );
-    
+          menuItems: menuItemsForSend,
+        },
+      })
+    );
   };
 
   const handleOrderNowClick = () => {
@@ -47,7 +63,6 @@ const OrderNow = ({ user }) => {
       setIsLoading(false);
       setIsConfirmationOpen(true);
     }, 1500); // 1.5 seconds delay
-  
   };
 
   const handleFeedbackSubmit = () => {

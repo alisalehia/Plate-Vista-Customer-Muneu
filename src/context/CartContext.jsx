@@ -12,10 +12,23 @@ export function CartProvider({ children }) {
     localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : []
   );
 
+  const [orders, setOrders] = useState(
+    localStorage.getItem("orders")
+      ? JSON.parse(localStorage.getItem("orders"))
+      : []
+  );
+
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  useEffect(() => {
+    localStorage.setItem("orders", JSON.stringify(orders));
+  }, [orders]);
+
+  const addOrder = (cart) => {
+    setOrders([...orders, cart]);
+  };
   const addToCart = (item) => {
     setCart((prevCart) => {
       const itemExistIndex = prevCart.findIndex((i) => i._id === item._id);
@@ -42,7 +55,7 @@ export function CartProvider({ children }) {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, clearCart }}
+      value={{ cart, addToCart, removeFromCart, clearCart, addOrder, orders }}
     >
       {children}
     </CartContext.Provider>
